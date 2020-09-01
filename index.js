@@ -17,13 +17,7 @@ dbConnection();
 
 
 //Routes
-app.get('/', (req, res) => {
-    res.json({
-        ok: true,
-        msg: 'Hola mundo'
-    });
-
-});
+app.use('/api/users', require('./routes/users.routes'));
 
 app.listen(process.env.PORT, () => {
     console.log('Servidor corriendo en puerto with nodemon ' + process.env.PORT);
