@@ -7,7 +7,9 @@ const dbConnection = async() => {
         await mongoose.connect(process.env.DB_CNN, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            useCreateIndex: true
+            useCreateIndex: true,
+            useFindAndModify: false //(node:16603) DeprecationWarning: Mongoose: `findOneAndUpdate()` and `findOneAndDelete()` 
+                //without the `useFindAndModify` option set to false are deprecated.
         });
         console.log('DB online');
     } catch (error) {
