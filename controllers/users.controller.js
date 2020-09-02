@@ -1,5 +1,7 @@
 //require response from express in order to have snippets
 const { response } = require('express');
+const bcryptjs = require('bcryptjs');
+
 
 const User = require('../models/user.model')
 
@@ -17,7 +19,7 @@ const getUsers = async(req, res) => {
 
 const newUser = async(req, res = response) => {
 
-    const { email, password, name, lastName } = req.body;
+    const { email, password } = req.body;
 
     try {
 
@@ -31,6 +33,13 @@ const newUser = async(req, res = response) => {
         }
 
         const user = new User(req.body);
+
+
+        //Password Encryption
+        const salt = bcryptjs.genSaltSync();
+        user.password = bcryptjs.hashSync(password, salt);
+
+        // create user
         await user.save();
         res.json({
             ok: true,
