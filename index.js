@@ -12,6 +12,9 @@ const app = express();
 //CORS config
 app.use(cors());
 
+//body reading
+app.use(express.json());
+
 //Data base
 dbConnection();
 
