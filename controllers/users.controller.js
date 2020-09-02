@@ -107,7 +107,39 @@ const updateUser = async(req, res = response) => {
             msg: 'Error 500'
         });
     }
-}
+};
+
+const deleteUser = async(req, res = response) => {
+
+    //TODO token validation and user comprobation
+    const uid = req.params.id;
 
 
-module.exports = { getUsers, newUser, updateUser };
+    try {
+        const userDB = await User.findById(uid);
+
+        if (!userDB) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe ningun usuario con el id ingresado'
+            });
+        }
+
+        await User.findByIdAndDelete(uid);
+
+        res.json({
+            ok: true,
+            msg: 'Usuario Eliminado'
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error 500'
+        });
+    }
+
+};
+
+
+module.exports = { getUsers, newUser, updateUser, deleteUser };
