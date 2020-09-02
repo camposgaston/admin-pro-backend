@@ -74,29 +74,25 @@ const updateUser = async(req, res = response) => {
             });
         }
 
-        //Update user data
-        const data = req.body;
+        // delete password , google and email fields from req.body
+        const { password, google, email, ...data } = req.body;
 
-        if (userDB.email === req.body.email) {
-            delete data.email;
-        } else {
+        // checks if user is sending a new email to update
+        if (userDB.email !== email) {
 
-            const emailExist = await User.findOne({ email: req.body.email });
+            const emailExist = await User.findOne({ email: email });
+
             if (emailExist) {
                 return res.status(404).json({
                     ok: false,
-                    msg: 'El correo ingresado ya pertenece a optro usuario'
+                    msg: 'El correo ingresado ya pertenece a otro usuario'
                 });
             }
-
+            //Email doesn´t exist in db, proceed
+            data.email = email;
         }
 
-
-
-        delete data.password;
-        delete data.google;
-        //delete data.email;
-
+        //Update user data
         const updatedUser = await User.findByIdAndUpdate(uid, data, { new: true });
 
         res.json({
