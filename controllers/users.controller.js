@@ -1,5 +1,6 @@
 //require response from express in order to have snippets
 const { response } = require('express');
+const { validationResult } = require('express-validator');
 
 const User = require('../models/user.model')
 
@@ -18,6 +19,14 @@ const getUsers = async(req, res) => {
 const newUser = async(req, res = response) => {
 
     const { email, password, name, lastName } = req.body;
+
+    const validationErrors = validationResult(req);
+    if (!validationErrors.isEmpty()) {
+        return res.status(400).json({
+            ok: false,
+            errors: validationErrors.mapped()
+        });
+    }
 
     try {
 
