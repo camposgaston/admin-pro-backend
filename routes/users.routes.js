@@ -5,11 +5,12 @@ const { check } = require('express-validator');
 const { dataValidation } = require('../middlewares/data-validation');
 
 const { getUsers, newUser, updateUser, deleteUser } = require('../controllers/users.controller');
+const { jwtValidate } = require('../middlewares/jwt-validation');
 
 const router = Router();
 
 
-router.get('/', getUsers);
+router.get('/', jwtValidate, getUsers);
 
 router.post('/', [
         check('name', 'El nombre es obligatorio').not().isEmpty(),
@@ -22,6 +23,7 @@ router.post('/', [
 
 
 router.put('/:id', [
+        jwtValidate,
         check('name', 'El nombre es obligatorio').not().isEmpty(),
         check('lastName', 'El apellido es obligatotio').not().isEmpty(),
         check('role', 'El Rol es obligatorio').not().isEmpty(),
@@ -31,6 +33,6 @@ router.put('/:id', [
     updateUser);
 
 
-router.delete('/:id', deleteUser);
+router.delete('/:id', jwtValidate, deleteUser);
 
 module.exports = router;
