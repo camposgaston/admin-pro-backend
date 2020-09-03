@@ -13,7 +13,8 @@ const HospitalSchema = Schema({
         },
         createdBy: {
             type: Schema.Types.ObjectId,
-            ref: 'User'
+            ref: 'User',
+            required: true
         }
     },
     //Rename collection example
@@ -24,7 +25,7 @@ const HospitalSchema = Schema({
 HospitalSchema.method('toJSON', function() {
     const { __v, _id, ...object } = this.toObject();
 
-    object.uid = _id;
+    object.hid = _id;
     return object;
 });
 

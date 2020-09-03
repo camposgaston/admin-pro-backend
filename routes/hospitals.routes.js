@@ -10,16 +10,21 @@ const { getHospitals, newHospital, updateHospital, deleteHospital } = require('.
 
 const router = Router();
 
-router.get('/', getHospitals);
+router.get('/', jwtValidate, getHospitals);
 
-router.post('/', [],
+router.post('/', [
+        jwtValidate,
+        check('name', 'El nombre del Hospital es necesario').not().isEmpty(),
+        // check('createdBy', 'El id usuario no fue correctamente recibido').not().isEmpty(),
+        dataValidation
+    ],
     newHospital);
 
 
-router.put('/:id', [],
+router.put('/:id', [jwtValidate],
     updateHospital);
 
 
-router.delete('/:id', deleteHospital);
+router.delete('/:id', jwtValidate, deleteHospital);
 
 module.exports = router;

@@ -22,12 +22,14 @@ const getHospitals = async(req, res = response) => {
 
 const newHospital = async(req, res = response) => {
 
-    // const { email, password } = req.body;
+    const uid = req.uid;
+    const hospital = new Hospital({
+        createdBy: uid,
+        ...req.body
+    });
+
 
     try {
-
-        const hospital = new Hospital(req.body);
-
 
         // create hospital
         await hospital.save();
@@ -50,7 +52,7 @@ const newHospital = async(req, res = response) => {
 const updateHospital = async(req, res = response) => {
 
     //TODO token validation and user comprobation
-    const uid = req.params.id;
+    const hid = req.params.id;
 
 
     try {
