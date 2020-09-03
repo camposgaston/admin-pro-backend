@@ -1,6 +1,7 @@
 //require response from express in order to have snippets
 const { response } = require('express');
 const bcryptjs = require('bcryptjs');
+const { jtwGenerator } = require('../helpers/jwt');
 
 
 const User = require('../models/user.model');
@@ -42,9 +43,14 @@ const newUser = async(req, res = response) => {
 
         // create user
         await user.save();
+
+        //generate token
+        const token = await jtwGenerator(user.id);
+
         res.json({
             ok: true,
-            user
+            user,
+            token
         });
     } catch (error) {
         console.log(error);

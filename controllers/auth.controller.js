@@ -1,6 +1,7 @@
 const { response } = require('express');
 const bcryptjs = require('bcryptjs');
 const User = require('../models/user.model');
+const { jtwGenerator } = require('../helpers/jwt');
 
 const login = async(req, res = response) => {
 
@@ -27,10 +28,11 @@ const login = async(req, res = response) => {
         }
 
         //generate token
+        const token = await jtwGenerator(userDB.id);
 
         res.status(200).json({
             ok: true,
-            msg: 'ingreso Correcto'
+            token
         });
     } catch (error) {
         console.log(error);
