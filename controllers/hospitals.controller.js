@@ -1,8 +1,5 @@
 //require response from express in order to have snippets
 const { response } = require('express');
-const bcryptjs = require('bcryptjs');
-const { jtwGenerator } = require('../helpers/jwt');
-
 
 const Hospital = require('../models/hospital.model');
 
@@ -10,13 +7,13 @@ const Hospital = require('../models/hospital.model');
 
 const getHospitals = async(req, res = response) => {
 
-    //Filter 
-    //const hospitals = await Hospital.find({}, 'name lastName email role google');
+    //find hospitals and populate user data 
+    const hospitals = await Hospital.find()
+        .populate('createdBy', 'name lastName img');
 
     res.json({
         ok: true,
-        //array: hospitals,
-        mgs: 'get hospitals works'
+        hospitals
     });
 };
 
@@ -32,11 +29,11 @@ const newHospital = async(req, res = response) => {
     try {
 
         // create hospital
-        await hospital.save();
+        const hospitalDB = await hospital.save();
 
         res.json({
             ok: true,
-            array: hospital
+            array: hospitalDB
         });
     } catch (error) {
         console.log(error);
