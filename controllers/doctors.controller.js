@@ -1,8 +1,5 @@
 //require response from express in order to have snippets
 const { response } = require('express');
-const bcryptjs = require('bcryptjs');
-const { jtwGenerator } = require('../helpers/jwt');
-
 
 const Doctor = require('../models/doctor.model');
 
@@ -10,31 +7,33 @@ const Doctor = require('../models/doctor.model');
 
 const getDoctors = async(req, res = response) => {
 
-    //Filter 
-    // const doctors = await Doctor.find({}, 'name lastName email role google');
+    //find doctors and populate user and hospital data 
+    const doctors = await Doctor.find()
+        .populate('createdBy', 'name lastName img')
+        .populate('hospital', 'name img');
 
     res.json({
         ok: true,
-        // array: doctors,
-        mgs: 'get doctors works'
+        doctors
     });
 };
 
 const newDoctor = async(req, res = response) => {
 
-    // const { email, password } = req.body;
+    // const { hospital } = req.body;
+
+    const uid = req.uid;
+    const doctor = new Doctor({
+        createdBy: uid,
+        ...req.body
+    });
 
     try {
-
-        const doctor = new Doctor(req.body);
-
-
         // create doctor
-        await doctor.save();
-
+        const doctorDB = await doctor.save();
         res.json({
             ok: true,
-            array: doctor
+            array: doctorDB
         });
     } catch (error) {
         console.log(error);
@@ -43,8 +42,6 @@ const newDoctor = async(req, res = response) => {
             msg: 'Error 500'
         });
     }
-
-
 };
 
 const updateDoctor = async(req, res = response) => {
