@@ -1,16 +1,14 @@
 //require response from express in order to have snippets
 const { response } = require('express');
 const { v4: uuidv4 } = require('uuid');
-const User = require('../models/user.model');
-const Doctor = require('../models/doctor.model');
-const Hospital = require('../models/hospital.model');
+const { updateImgDb } = require('../helpers/updateImg')
 
 const fileUpload = async(req, res = response) => {
 
     const { collection, id } = req.params;
 
     // collection validation
-    const allowedCollections = ['hospitals', 'users', 'doctors']
+    const allowedCollections = ['hospitals', 'users', 'doctors'];
     if (!allowedCollections.includes(collection)) {
         return res.status(400).json({
             ok: false,
@@ -46,6 +44,16 @@ const fileUpload = async(req, res = response) => {
 
     // Image path
     const path = `./uploads/${collection}/${fileName}`;
+
+    // If ID exist, update DB
+    const updateDbById = await updateImgDb(collection, id, fileName);
+
+    if (!updateDbById) {
+        return res.status(400).json({
+            ok: false,
+            msg: `El id:${id} no pertenece a ningun usuario ni medico ni hospital, operacion cancelada`
+        });
+    }
 
     // mv() method to place the file 
     file.mv(path, (err) => {
