@@ -25,6 +25,8 @@ app.use('/api/login', require('./routes/auth.routes'));
 app.use('/api/hospitals', require('./routes/hospitals.routes'));
 app.use('/api/doctors', require('./routes/doctors.routes'));
 app.use('/api/all', require('./routes/searchs.routes'));
+app.use('/api/upload', require('./routes/uploads.routes'));
+
 
 app.listen(process.env.PORT, () => {
     console.log('Servidor corriendo en puerto with nodemon ' + process.env.PORT);

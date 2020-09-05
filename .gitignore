@@ -2,3 +2,7 @@
 /node_modules
 #.env file
 .env
+#Uploaded files
+uploads/doctors/9185e25d-3101-4329-916d-96c9bd87ca0c.jpg
+uploads/users/f320b1bf-61e5-45de-9e08-c169165109bb.jpg
+uploads/hospitals/624916e9-573b-46aa-9cee-438a90494df6.jpg
