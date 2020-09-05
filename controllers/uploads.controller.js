@@ -1,3 +1,5 @@
+const path = require('path');
+const fs = require('fs');
 //require response from express in order to have snippets
 const { response } = require('express');
 const { v4: uuidv4 } = require('uuid');
@@ -78,7 +80,24 @@ const fileUpload = async(req, res = response) => {
 
 };
 
+const returnImg = async(req, res = response) => {
+    const { collection, img } = req.params;
+
+    let pathImg = path.join(__dirname, `../uploads/${collection}/${img}`);
+
+
+    if (fs.existsSync(pathImg)) {
+        res.sendFile(pathImg);
+    } else {
+        // default Img
+        pathImg = path.join(__dirname, `../uploads/No_image_available.png`);
+        res.sendFile(pathImg);
+    }
+
+
+};
 
 module.exports = {
-    fileUpload
+    fileUpload,
+    returnImg
 };
