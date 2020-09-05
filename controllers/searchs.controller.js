@@ -28,6 +28,46 @@ const getAllSearch = async(req, res = response) => {
     });
 };
 
+const getCollectionSearch = async(req, res = response) => {
+
+    const search = req.params.search;
+    const collection = req.params.collection;
+    const regexp = new RegExp(search, 'i');
+
+    let data = [];
+
+    switch (collection) {
+        case 'doctors':
+            data = await Doctor.find({ name: regexp })
+                .populate('createdBy', 'name lastName img')
+                .populate('hospital', 'name img');
+            break;
+
+        case 'users':
+            data = await User.find({ $or: [{ name: regexp }, { lastName: regexp }] });
+            break;
+
+        case 'hospitales':
+            data = await Hospital.find({ name: regexp })
+                .populate('createdBy', 'name lastName img');
+            break;
+
+        default:
+
+            return res.status(400).json({
+                ok: false,
+                msg: `La tabla ${collection} no existe`
+            })
+    }
+
+    res.json({
+        ok: true,
+        result: data
+    });
+
+};
+
 module.exports = {
-    getAllSearch
+    getAllSearch,
+    getCollectionSearch
 };
