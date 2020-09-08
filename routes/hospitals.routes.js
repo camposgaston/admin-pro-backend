@@ -21,7 +21,12 @@ router.post('/', [
     newHospital);
 
 
-router.put('/:id', [jwtValidate],
+router.put('/:id', [
+        jwtValidate,
+        check('name', 'El nombre del Hospital es necesario').not().isEmpty(),
+        // check('createdBy', 'El id usuario no fue correctamente recibido').not().isEmpty(),
+        dataValidation
+    ],
     updateHospital);
 
 

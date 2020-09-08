@@ -48,24 +48,26 @@ const newHospital = async(req, res = response) => {
 
 const updateHospital = async(req, res = response) => {
 
-    //TODO token validation and user comprobation
     const hid = req.params.id;
-
+    const uid = req.uid;
 
     try {
-
-        const hospitalDB = await Hospital.findById(uid);
+        const hospitalDB = await Hospital.findById(hid);
 
         if (!hospitalDB) {
             return res.status(404).json({
                 ok: false,
-                msg: 'No existe ningun Hospital con el id ingresado'
+                msg: 'No existe ningun Hospital con el id ingresado: ' + hid
             });
         }
 
+        const updateHospitalData = {
+            ...req.body,
+            createdBy: uid
+        }
 
         //Update hospital data
-        const updatedHospital = await Hospital.findByIdAndUpdate(uid, data, { new: true });
+        const updatedHospital = await Hospital.findByIdAndUpdate(hid, updateHospitalData, { new: true });
 
         res.json({
             ok: true,
@@ -82,11 +84,36 @@ const updateHospital = async(req, res = response) => {
 };
 
 
-const deleteHospital = (req, res = response) => {
-    res.json({
-        ok: true,
-        msg: 'Hospital delete'
-    });
+const deleteHospital = async(req, res = response) => {
+
+    const hid = req.params.id;
+
+
+    try {
+        const hospitalDB = await Hospital.findById(hid);
+
+        if (!hospitalDB) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe ningun Hospital con el id ingresado: ' + hid
+            });
+        }
+
+        await Hospital.findByIdAndDelete(hid);
+
+
+        res.json({
+            ok: true,
+            msg: 'Hospital Eliminado'
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error 500'
+        });
+    }
 };
 
 
