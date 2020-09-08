@@ -1,6 +1,6 @@
 // Path: /api/login
 const { Router } = require('express');
-const { login } = require('../controllers/auth.controller');
+const { login, googleSignIn } = require('../controllers/auth.controller');
 const { check } = require('express-validator');
 const { dataValidation } = require('../middlewares/data-validation');
 
@@ -14,4 +14,10 @@ router.post('/', [
     login
 );
 
+router.post('/google', [
+        check('token', 'El google token es obligatorio').notEmpty(),
+        dataValidation
+    ],
+    googleSignIn
+);
 module.exports = router;
