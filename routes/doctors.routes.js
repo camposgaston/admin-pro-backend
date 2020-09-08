@@ -21,11 +21,15 @@ router.post('/', [
     ],
     newDoctor);
 
-
-router.put('/:id', [],
+router.put('/:id', [
+        jwtValidate,
+        check('name', 'El nombre del Doctor es necesario').not().isEmpty(),
+        check('hospital', 'El id del hospital al que pertenece el medico es necesario').not().isEmpty(),
+        dataValidation
+    ],
     updateDoctor);
 
 
-router.delete('/:id', deleteDoctor);
+router.delete('/:id', jwtValidate, deleteDoctor);
 
 module.exports = router;

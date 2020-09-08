@@ -46,13 +46,13 @@ const newDoctor = async(req, res = response) => {
 
 const updateDoctor = async(req, res = response) => {
 
-    //TODO token validation and user comprobation
-    const uid = req.params.id;
+    const did = req.params.id;
+    const uid = req.uid;
 
 
     try {
 
-        const doctorDB = await Doctor.findById(uid);
+        const doctorDB = await Doctor.findById(did);
 
         if (!doctorDB) {
             return res.status(404).json({
@@ -62,8 +62,13 @@ const updateDoctor = async(req, res = response) => {
         }
 
 
+        const updatedDoctorData = {
+            ...req.body,
+            createdBy: uid
+        }
+
         //Update doctor data
-        const updatedDoctor = await Doctor.findByIdAndUpdate(uid, data, { new: true });
+        const updatedDoctor = await Doctor.findByIdAndUpdate(did, updatedDoctorData, { new: true });
 
         res.json({
             ok: true,
@@ -80,11 +85,36 @@ const updateDoctor = async(req, res = response) => {
 };
 
 
-const deleteDoctor = (req, res = response) => {
-    res.json({
-        ok: true,
-        msg: 'Doctor delete'
-    });
+const deleteDoctor = async(req, res = response) => {
+
+    const did = req.params.id;
+
+
+    try {
+        const doctorDB = await Doctor.findById(did);
+
+        if (!doctorDB) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe ningun Medico con el id ingresado: ' + did
+            });
+        }
+
+        await Doctor.findByIdAndDelete(did);
+
+
+        res.json({
+            ok: true,
+            msg: 'Doctor Eliminado'
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error 500 al eliminar'
+        });
+    }
 };
 
 
