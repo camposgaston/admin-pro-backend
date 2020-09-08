@@ -47,14 +47,37 @@ const login = async(req, res = response) => {
 const googleSignIn = async(req, res = response) => {
     const googleToken = req.body.token;
     try {
-        const { name, email, picture } = await googleVerify(googleToken);
+        const { family_name, given_name, email, picture } = await googleVerify(googleToken);
+
+        //Verify if user exist
+        const userDB = await User.findOne({ email });
+
+        if (!userDB) {
+            // create new user if not exist
+            user = new User({
+                name: given_name,
+                lastName: family_name,
+                password: 'c928b324ab9cb78144abc8f02c4d3910', //Just for having one (password is required)
+                email,
+                google: true,
+                img: picture,
+            });
+        } else {
+            // update user "google" property to true if exist
+            user = userDB;
+            user.google = true;
+        };
+
+        // Save in Database
+
+        await user.save();
+
+        //generate token
+        const token = await jtwGenerator(user.id);
 
         res.json({
             ok: true,
-            msg: 'Google Signin',
-            name,
-            email,
-            picture
+            token
         });
     } catch (error) {
         res.status(401).json({
