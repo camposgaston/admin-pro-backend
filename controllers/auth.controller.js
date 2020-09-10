@@ -39,7 +39,7 @@ const login = async(req, res = response) => {
         console.log(error);
         res.status(500).json({
             ok: false,
-            msg: 'Error 500, please contact admin'
+            msg: 'Error 500, contacte al administrador'
         });
     }
 };

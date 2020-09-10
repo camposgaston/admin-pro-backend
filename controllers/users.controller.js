@@ -47,7 +47,7 @@ const newUser = async(req, res = response) => {
         if (emailExist) {
             return res.status(400).json({
                 ok: false,
-                msg: 'Email already exist!'
+                msg: 'El email ingresado ya corresponde a un usuario registado'
             });
         }
 
@@ -73,7 +73,7 @@ const newUser = async(req, res = response) => {
         console.log(error);
         res.status(500).json({
             ok: false,
-            msg: 'Error 500'
+            msg: 'Error 500, contacte al administrador'
         });
     }
 
@@ -93,7 +93,7 @@ const updateUser = async(req, res = response) => {
         if (!userDB) {
             return res.status(404).json({
                 ok: false,
-                msg: 'No existeningun usuario con el id ingresado'
+                msg: 'No existe ningun usuario con el id ingresado'
             });
         }
 
@@ -158,7 +158,7 @@ const deleteUser = async(req, res = response) => {
         console.log(error);
         res.status(500).json({
             ok: false,
-            msg: 'Error 500'
+            msg: 'Error 500, contacte al administrador'
         });
     }
 
