@@ -11,6 +11,8 @@ const router = Router();
 router.use(expressFileUpload());
 
 router.put('/:collection/:id', jwtValidate, fileUpload);
-router.get('/:collection/:img', jwtValidate, returnImg);
+router.get('/:collection/:img',
+    // jwtValidate, 
+    returnImg);
 
 module.exports = router;
