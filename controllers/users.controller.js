@@ -105,14 +105,24 @@ const updateUser = async(req, res = response) => {
 
             const emailExist = await User.findOne({ email: email });
 
+            // check that Email doesn´t exist in db
             if (emailExist) {
                 return res.status(404).json({
                     ok: false,
                     msg: 'El correo ingresado ya pertenece a otro usuario'
                 });
             }
-            //Email doesn´t exist in db, proceed
-            data.email = email;
+
+            // check that it's not a google user
+            if (!userDB.google) {
+                data.email = email;
+            } else {
+                // A google user trying to change his email!
+                return res.status(404).json({
+                    ok: false,
+                    msg: 'El correo no puede ser modificado, debido a que es una cuenta Google'
+                });
+            }
         }
 
         //Update user data
