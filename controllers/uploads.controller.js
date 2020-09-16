@@ -70,7 +70,8 @@ const fileUpload = async(req, res = response) => {
 
         res.json({
             ok: true,
-            msg: `File uploaded to collection:${collection} id:${id} fileName:${file.name} fileNewName:${fileName}`
+            msg: `File uploaded to collection:${collection} id:${id} fileName:${file.name} fileNewName:${fileName}`,
+            fileName
         })
     });
 
