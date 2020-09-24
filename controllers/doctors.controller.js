@@ -18,6 +18,30 @@ const getDoctors = async(req, res = response) => {
     });
 };
 
+
+const getDoctorById = async(req, res = response) => {
+
+    const did = req.params.id;
+
+    try {
+        //find doctor and populate user and hospital data 
+        const doctor = await Doctor.findById(did)
+            .populate('createdBy', 'name lastName img')
+            .populate('hospital', 'name img');
+
+        res.json({
+            ok: true,
+            doctor
+        });
+    } catch (error) {
+        res.json({
+            ok: false,
+            msg: 'Error de consulta, hable con el administrador'
+        });
+    }
+
+}
+
 const newDoctor = async(req, res = response) => {
 
     // const { hospital } = req.body;
@@ -118,4 +142,4 @@ const deleteDoctor = async(req, res = response) => {
 };
 
 
-module.exports = { getDoctors, newDoctor, updateDoctor, deleteDoctor };
+module.exports = { getDoctors, newDoctor, updateDoctor, deleteDoctor, getDoctorById };

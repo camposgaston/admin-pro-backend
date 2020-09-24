@@ -6,11 +6,13 @@ const { dataValidation } = require('../middlewares/data-validation');
 
 const { jwtValidate } = require('../middlewares/jwt-validation');
 
-const { getDoctors, newDoctor, updateDoctor, deleteDoctor } = require('../controllers/doctors.controller');
+const { getDoctors, newDoctor, updateDoctor, deleteDoctor, getDoctorById } = require('../controllers/doctors.controller');
 
 const router = Router();
 
-router.get('/', getDoctors);
+router.get('/', jwtValidate, getDoctors);
+
+router.get('/:id', jwtValidate, getDoctorById);
 
 router.post('/', [
         jwtValidate,
