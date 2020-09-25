@@ -1,5 +1,6 @@
 const { response } = require('express');
 const jwt = require('jsonwebtoken');
+const User = require('../models/user.model');
 
 const jwtValidate = (req, res = response, next) => {
     //Read token header
@@ -29,6 +30,38 @@ const jwtValidate = (req, res = response, next) => {
     }
 };
 
+const adminRoleValidate = async(req, res = response, next) => {
+
+    const uid = req.uid;
+    try {
+
+        const userDB = await User.findById(uid);
+        if (!userDB) {
+            return res.status(401).json({
+                ok: false,
+                msg: 'usuario no existe en base de datos'
+            });
+        }
+
+        if (userDB.role !== 'ADMIN_ROLE') {
+            return res.status(403).json({
+                ok: false,
+                msg: 'usuario no autorizado'
+            });
+        }
+
+        next();
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error 500, consulte al administrador'
+        });
+    }
+}
+
 module.exports = {
-    jwtValidate
+    jwtValidate,
+    adminRoleValidate
 };
